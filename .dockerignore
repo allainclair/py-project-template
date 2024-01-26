@@ -1,0 +1,7 @@
+**/__pycache__
+.pdm-python
+.venv
+pdm.lock
+.idea
+.pytest_cache
+.coverage

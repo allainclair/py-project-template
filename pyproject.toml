@@ -1,0 +1,99 @@
+[project]
+name = "py-project-template"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "Allainclair Flausino dos Santos", email = "allainclair@gmail.com"},
+]
+dependencies = [
+    "httpx>=0.26.0",
+]
+requires-python = "==3.12.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.dev-dependencies]
+test = [
+    "pytest>=7.4.4",
+    "coverage>=7.4.0",
+    "pytest-asyncio>=0.23.3",  # Remove it if you do not need asyncio.
+]
+lint = [
+    "mypy>=1.8.0",
+    "ruff>=0.1.14",
+]
+
+[tool.pdm.scripts]
+cov = {cmd = ["coverage", "run", "-m", "pytest", "-vvss", "tests"]}
+cov-term = {cmd = ["coverage", "report", "-m"]}
+cov-html = {cmd = ["coverage", "html"]}
+cov-all = {composite = ["cov", "cov-term"]}  # run coverage and report with terminal output
+cov-all-html = {composite = ["cov", "cov-html"]}  # run coverage and report with html output
+
+mp = {cmd = ["mypy",  "--strict", "."]}
+rf = {cmd = ["ruff", "."]}
+rf-fix = {cmd = ["ruff", ".", "--fix"]}
+rf-fmt = {cmd = ["ruff", "format"]}
+lint = {composite = ["rf-fmt", "rf", "mp"]}
+
+lint-test = {composite = ["lint", "cov-all"]}
+
+[tool.pytest.ini_options]  # https://docs.pytest.org/en/latest/reference/customize.html
+asyncio_mode = "auto"  # Remove it if you do not need asyncio.
+
+[tool.ruff]
+line-length = 80
+
+# Suggestions to add to select: EM
+select = [
+	"E",
+	"F",
+	"I",
+	"W",
+	"N",
+	"COM",
+	"C4",
+	"PIE",
+	"T20",
+	"Q",
+	"RET",
+	"SIM",
+	"ARG",
+	"PGH",
+	"RUF",
+]
+ignore = [
+	# https://docs.astral.sh/ruff/formatter/#format-suppression
+	"COM812",
+	"COM819",
+	"E111",
+	"E114",
+	"E117",
+	"D206",
+	"D300",
+	"ISC001",
+	"ISC002",
+	"Q000",
+	"Q001",
+	"Q002",
+	"Q003",
+	"W191",
+
+	"RUF009",  # Missing dataclass field.
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "tab"
+line-ending = "lf"  # Use `\n` line endings for all files
+
+[tool.ruff.lint.isort]
+case-sensitive = true
+split-on-trailing-comma = false
+
+[tool.ruff.mccabe]
+max-complexity = 10
