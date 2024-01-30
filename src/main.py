@@ -1,6 +1,6 @@
 def main() -> None:
-	return None
+	"""Main"""
 
 
-if __name__ == '__main__':
-	main()
+if __name__ == "__main__":
+	pass
