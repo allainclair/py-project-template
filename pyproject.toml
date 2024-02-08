@@ -55,7 +55,7 @@ asyncio_mode = "auto"  # Remove it if you do not need asyncio.
 line-length = 80
 
 # Suggestions to add to select: EM
-select = [
+lint.select = [
 	"E",
 	"F",
 	"I",
@@ -72,7 +72,7 @@ select = [
 	"PGH",
 	"RUF",
 ]
-ignore = [
+lint.ignore = [
 	# https://docs.astral.sh/ruff/formatter/#format-suppression
 	"E111",  # https://docs.astral.sh/ruff/rules/indentation-with-invalid-multiple/
 	"E114",  # https://docs.astral.sh/ruff/rules/indentation-with-invalid-multiple-comment/
@@ -85,7 +85,6 @@ ignore = [
 	# "Q002",  # https://docs.astral.sh/ruff/rules/bad-quotes-docstring/
 	# "Q003",  # https://docs.astral.sh/ruff/rules/avoidable-escaped-quote/
 	"W191",  # https://docs.astral.sh/ruff/rules/tab-indentation/
-	"RUF009",  # https://docs.astral.sh/ruff/rules/function-call-in-dataclass-default-argument/
 ]
 
 [tool.ruff.format]
@@ -97,5 +96,8 @@ line-ending = "lf"  # Use `\n` line endings for all files
 case-sensitive = true
 split-on-trailing-comma = false
 
-[tool.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 max-complexity = 10
+
+[tool.pytest-watcher]
+now = true
