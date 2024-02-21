@@ -101,3 +101,4 @@ max-complexity = 10
 
 [tool.pytest-watcher]
 now = true
+clear = true
