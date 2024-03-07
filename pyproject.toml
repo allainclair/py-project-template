@@ -24,7 +24,7 @@ test = [
 ]
 lint = [
 	"mypy>=1.8.0",
-	"ruff>=0.1.14",
+	"ruff>=0.3.1",
 ]
 debug = [
 	"pytest-watcher>=0.3.5",
@@ -39,9 +39,9 @@ cov = {composite = ["cov-run", "cov-term"]}  # run coverage and report with term
 cov-run-html = {composite = ["cov", "cov-html"]}  # run coverage and report with html output
 
 mypy-strict = {cmd = ["mypy", "--strict", "."]}
-ruff-dot = {cmd = ["ruff", "."]}
+ruff-dot = {cmd = ["ruff", "check", "."]}
 ruff-format = {cmd = ["ruff", "format"]}
-ruff-fix = {cmd = ["ruff", ".", "--fix"]}
+ruff-fix = {cmd = ["ruff", "check", ".", "--fix"]}
 
 ruff-all = {composite = ["ruff-dot", "ruff-format"]}
 lint = {composite = ["ruff-all", "mypy-strict"]}
