@@ -1,6 +1,11 @@
 # syntax=docker/dockerfile:1
 # WIP
-FROM python:3.12.1-alpine AS base
+
+FROM python:3.12.2-alpine AS base-python
+WORKDIR /app
+
+
+FROM python:3.12.2-alpine AS base
 WORKDIR /app
 # Manage curl and PDM
 RUN apk update && \
@@ -18,22 +23,26 @@ RUN pdm update -dG "test,lint"
 COPY src src
 COPY tests tests
 
+# FROM base AS dev-debug
+# RUN pdm update -dG "test,lint,debug"
+# COPY src src
+# COPY tests tests
 
-FROM base AS dev-debug
-RUN pdm update -dG "test,lint,debug"
+
+FROM base AS base-prod
+# RUN pdm install --global --prod  # Not working
+RUN pdm lock --prod  && \
+    pdm export --prod -o requirements.txt
+
+
+FROM base-python AS prod
 COPY src src
-COPY tests tests
-
-
-FROM base AS prod
-RUN pdm install --prod
-COPY src src
+COPY --from=base-prod ["/app/requirements.txt", "."]
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt && \
+    rm requirements.txt
+ENTRYPOINT ["python", "-m", "src.main"]
 
 
 FROM dev AS tests
 ENTRYPOINT ["pdm", "run", "lint-test"]
-
-
-FROM prod AS prod-run
-# Add the service to run
-ENTRYPOINT ["pdm", "list", "--graph"]

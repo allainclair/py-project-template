@@ -85,6 +85,7 @@ lint.ignore = [
 	# "Q002",  # https://docs.astral.sh/ruff/rules/bad-quotes-docstring/
 	# "Q003",  # https://docs.astral.sh/ruff/rules/avoidable-escaped-quote/
 	"W191",  # https://docs.astral.sh/ruff/rules/tab-indentation/
+	"COM812", # https://docs.astral.sh/ruff/rules/missing-trailing-comma/
 ]
 
 [tool.ruff.format]
