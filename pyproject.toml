@@ -36,7 +36,7 @@ cov-run = {cmd = ["coverage", "run", "--branch", "--source=src", "-m", "pytest",
 cov-term = {cmd = ["coverage", "report", "-m", "--fail-under=90"]}
 cov-html = {cmd = ["coverage", "html", "--fail-under=90"]}
 cov = {composite = ["cov-run", "cov-term"]}  # run coverage and report with terminal output
-cov-run-html = {composite = ["cov", "cov-html"]}  # run coverage and report with html output
+cov-run-html = {composite = ["cov-run", "cov-html"]}  # run coverage and report with html output
 
 mypy-strict = {cmd = ["mypy", "--strict", "."]}
 ruff-dot = {cmd = ["ruff", "check", "."]}
