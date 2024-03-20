@@ -48,6 +48,9 @@ lint = {composite = ["ruff-all", "mypy-strict"]}
 
 lint-test = {composite = ["lint", "cov"]}
 
+ptw_ = {cmd = ["ptw", "."]}
+ptw-cov = {cmd = ["ptw", ".", "--runner", "scripts/cov-html.sh"]}
+
 [tool.pytest.ini_options]  # https://docs.pytest.org/en/latest/reference/customize.html
 asyncio_mode = "auto"  # Remove it if you do not need asyncio.
 
