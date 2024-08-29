@@ -1,48 +1,37 @@
 # syntax=docker/dockerfile:1
-# WIP
 
-FROM python:3.12.2-alpine AS base-python
+# Change the version if you need it.
+FROM python:3.12.5-slim-bookworm AS base
 WORKDIR /app
 
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y \
+      curl \
+      make \
+    && curl -LsSf https://astral.sh/uv/install.sh | sh \
+    && apt-get remove -y curl && apt-get autoremove -y
 
-FROM python:3.12.2-alpine AS base
-WORKDIR /app
-# Manage curl and PDM
-RUN apk update && \
-    apk upgrade && \
-    apk add curl && \
-    curl -sSL https://pdm-project.org/install-pdm.py > install-pdm.py && \
-    python3 install-pdm.py -p /usr && \
-    rm install-pdm.py && \
-    apk del curl
 COPY pyproject.toml .
+COPY Makefile .
+COPY app app
+# COPY .env . # If necessary
+
+# Ensure `uv` is in the PATH
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+
+FROM base AS run
+ENTRYPOINT ["make", "run"]
 
 
 FROM base AS dev
-RUN pdm update -dG "test,lint"
-COPY src src
 COPY tests tests
 
-# FROM base AS dev-debug
-# RUN pdm update -dG "test,lint,debug"
-# COPY src src
-# COPY tests tests
+
+FROM dev AS lint
+ENTRYPOINT ["make", "lint"]
 
 
-FROM base AS base-prod
-# RUN pdm install --global --prod  # Not working
-RUN pdm lock --prod  && \
-    pdm export --prod -o requirements.txt
-
-
-FROM base-python AS prod
-COPY src src
-COPY --from=base-prod ["/app/requirements.txt", "."]
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt && \
-    rm requirements.txt
-ENTRYPOINT ["python", "-m", "src.main"]
-
-
-FROM dev AS tests
-ENTRYPOINT ["pdm", "run", "lint-test"]
+FROM dev AS coverage
+ENTRYPOINT ["make", "coverage"]

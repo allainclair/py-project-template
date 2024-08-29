@@ -1,9 +1,10 @@
 .idea/
 .venv/
 __pycache__/
-.pdm-python
-pdm.lock
+
+# uv
+uv.lock
 
 # Python coverage
 .coverage
-htmlcov/
+htmlcov

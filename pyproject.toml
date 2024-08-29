@@ -1,95 +1,105 @@
 [project]
 name = "py-project-template"
 version = "0.1.0"
-description = "Default template for PDM package"
+description = "My Python project template using uv and Docker"
 authors = [
 	{name = "Allainclair Flausino dos Santos", email = "allainclair@gmail.com"},
 ]
-dependencies = [
-	"httpx>=0.26.0",  # Remove it if you do not need this.
-]
+
 requires-python = "==3.12.*"
 readme = "README.md"
 license = {text = "MIT"}
 
-
-[tool.pdm]
-distribution = false
-
-[tool.pdm.dev-dependencies]
-test = [
-	"pytest>=7.4.4",
-	"pytest-asyncio>=0.23.3",  # Remove it if you do not need asyncio.
-	"coverage>=7.4.1",
-]
-lint = [
-	"mypy>=1.8.0",
-	"ruff>=0.3.1",
-]
-debug = [
-	"pytest-watcher>=0.3.5",
-	"rich>=13.7.0",
+dependencies = [
+	"httpx>=0.27.0",  # Remove it if you do not need this.
 ]
 
-[tool.pdm.scripts]
-cov-run = {cmd = ["coverage", "run", "--branch", "--source=src", "-m", "pytest", "-vvss", "tests"]}
-cov-term = {cmd = ["coverage", "report", "-m", "--fail-under=90"]}
-cov-html = {cmd = ["coverage", "html", "--fail-under=90"]}
-cov = {composite = ["cov-run", "cov-term"]}  # run coverage and report with terminal output
-cov-run-html = {composite = ["cov-run", "cov-html"]}  # run coverage and report with html output
 
-mypy-strict = {cmd = ["mypy", "--strict", "."]}
-ruff-dot = {cmd = ["ruff", "check", "."]}
-ruff-format = {cmd = ["ruff", "format"]}
-ruff-fix = {cmd = ["ruff", "check", ".", "--fix"]}
-
-ruff-all = {composite = ["ruff-dot", "ruff-format"]}
-lint = {composite = ["ruff-all", "mypy-strict"]}
-
-lint-test = {composite = ["lint", "cov"]}
-
-ptw_ = {cmd = ["ptw", "."]}
-ptw-cov = {cmd = ["ptw", ".", "--runner", "scripts/cov-html.sh"]}
-
-[tool.pytest.ini_options]  # https://docs.pytest.org/en/latest/reference/customize.html
-asyncio_mode = "auto"  # Remove it if you do not need asyncio.
+[tool.uv]
+dev-dependencies = [
+	"coverage",
+	"pytest",
+	"pytest-asyncio",
+	# "pytest-recording",  # Add to Make file pytest if necessary.
+]
 
 [tool.ruff]
 line-length = 80
 
-# Suggestions to add to select: EM
 lint.select = [
-	"E",
-	"F",
-	"I",
-	"W",
-	"N",
+	"A",
+	"ARG",
+	"ANN",  # Take care if there is conflict with mypy.
+	"ASYNC",
+	"B",
+	"BLE",
 	"COM",
 	"C4",
+	"C90",
+	# "DTZ",  # https://docs.astral.sh/ruff/rules/#flake8-datetimez-dtz
+	"E",
+	"EM",
+	"EXE",
+	"F",
+	"FBT",
+	"FLY",
+	"FURB",
+	"G",
+	"I",
+	"ICN",
+	"INP",
+	"INT",
+	"ISC",
+	"LOG",
+	"N",
+	"PERF",
+	"PGH",
 	"PIE",
-	"T20",
+	"PL",
+	"PT",
+	"PTH",
+	"PYI",
 	"Q",
 	"RET",
-	"SIM",
-	"ARG",
-	"PGH",
+	"RSE",
 	"RUF",
+	"S",
+	"SIM",
+	"SLOT",
+	"SLF",
+	"T10",
+	"T20",
+	"TCH",
+	"TD",
+	"TID",
+	"TRY",
+	"UP",
+	"W",
+	"YTT"
 ]
 lint.ignore = [
-	# https://docs.astral.sh/ruff/formatter/#format-suppression
-	"E111",  # https://docs.astral.sh/ruff/rules/indentation-with-invalid-multiple/
-	"E114",  # https://docs.astral.sh/ruff/rules/indentation-with-invalid-multiple-comment/
-	# "E117",  # https://docs.astral.sh/ruff/rules/over-indented/
-	# "D206",  # https://docs.astral.sh/ruff/rules/indent-with-spaces/
-	# "D300",  # https://docs.astral.sh/ruff/rules/triple-single-quotes/
-	# "ISC001", # https://docs.astral.sh/ruff/rules/single-line-implicit-string-concatenation/
-	# "ISC002",  # https://docs.astral.sh/ruff/rules/multi-line-implicit-string-concatenation/
-	# "Q001",  # https://docs.astral.sh/ruff/rules/bad-quotes-multiline-string/
-	# "Q002",  # https://docs.astral.sh/ruff/rules/bad-quotes-docstring/
-	# "Q003",  # https://docs.astral.sh/ruff/rules/avoidable-escaped-quote/
+	"ANN101",  # https://docs.astral.sh/ruff/rules/missing-type-self/
+	"ANN401",  # https://docs.astral.sh/ruff/rules/any-type/
+
+	# The following rules may cause conflicts when used with the formatter: `COM812`.
+	"COM812",  # https://docs.astral.sh/ruff/rules/missing-trailing-comma/
+
+	# The following rules may cause conflicts when used with the formatter: `ISC001`
+	"ISC001",  # https://docs.astral.sh/ruff/rules/single-line-implicit-string-concatenation/
+
+	# Magic value used in comparison
+	"PLR2004",  # https://docs.astral.sh/ruff/rules/magic-value-comparison/
+
+	"S101",  # https://docs.astral.sh/ruff/rules/assert/"
+	"SIM108",  # https://docs.astral.sh/ruff/rules/if-else-block-instead-of-if-exp/
+
+	"TD003", # https://docs.astral.sh/ruff/rules/missing-todo-link/
+	"TD002", # https://docs.astral.sh/ruff/rules/missing-todo-author/
+
+	# The `format.indent-style="tab"` option is incompatible with `W191`, which lints against all uses of tabs
 	"W191",  # https://docs.astral.sh/ruff/rules/tab-indentation/
-	"COM812", # https://docs.astral.sh/ruff/rules/missing-trailing-comma/
 ]
+lint.mccabe.max-complexity = 5
 
 [tool.ruff.format]
 quote-style = "double"
@@ -100,8 +110,12 @@ line-ending = "lf"  # Use `\n` line endings for all files
 case-sensitive = true
 split-on-trailing-comma = false
 
-[tool.ruff.lint.mccabe]
-max-complexity = 10
+
+[tool.pytest.ini_options]  # https://docs.pytest.org/en/latest/reference/customize.html
+filterwarnings = ["error"]
+asyncio_default_fixture_loop_scope = "function"
+asyncio_mode = "auto"
+log_cli = true
 
 [tool.pytest-watcher]
 now = true

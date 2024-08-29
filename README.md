@@ -1,6 +1,7 @@
-# Python project template
+# Simple python project template to be based on.
 
-## Techs
-* [pyenv](https://github.com/pyenv/pyenv) - python version management: change your `.python-version` file to change the python version
-* [pdm](https://pdm-project.org/) - python package and dependency manager
-* [docker](https://www.docker.com) - container platform
+## Main techs
+
+- [uv](https://docs.astral.sh/uv/) - python version and dependency manager.
+- [docker](https://www.docker.com) - container platform.
+- Makefile

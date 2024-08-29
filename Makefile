@@ -1,17 +1,64 @@
-docker-build-dev:
-	docker build --tag=dev --target=dev .
+clean:
+	rm -rf .venv uv.lock htmlcov .coverage
 
-docker-build-prod:
-	docker build --tag=prod --target=prod .
+install-python:
+	uv python install 3.12
 
-docker-build-tests:
-	docker build --tag=tests --target=tests .
 
-docker-run-dev-sh: docker-build-dev
-	docker run --rm -it --entrypoint sh dev
+# Main
+run: install-python  # Main command for running.
+	uv run --no-dev python --version
 
-docker-run-prod: docker-build-prod
-	docker run --rm -it prod
 
-docker-run-tests: docker-build-tests
-	docker run --rm -it tests
+# Lint
+ruff: install-python
+	uvx ruff check .
+
+ruff-fix: install-python
+	uvx ruff check . --fix
+
+ruff-format: install-python
+	uvx ruff format
+
+mypy: install-python
+	uvx mypy --strict .
+
+lint: ruff mypy  # Main command for linting.
+
+
+# Coverage and testing
+pytest: install-python
+	uv run pytest -ssvv .
+
+coverage-pytest: install-python
+	uv run coverage run --branch --source=app -m pytest -ssvv tests
+
+coverage-html: coverage-pytest
+	uv run coverage html --fail-under=90
+
+coverage: coverage-pytest  # Main command for testing.
+	uv run coverage report --fail-under=90
+
+
+# Docker run
+docker-build-run:
+	docker build --tag=run --target=run .
+
+docker-run: docker-build-run
+	docker run --rm run
+
+
+# Docker lint
+docker-build-lint:
+	docker build --tag=lint --target=lint .
+
+docker-lint: docker-build-lint
+	docker run --rm lint
+
+
+# Docker coverage and testing
+docker-build-coverage:
+	docker build --tag=coverage --target=coverage .
+
+docker-coverage: docker-build-coverage
+	docker run --rm coverage
