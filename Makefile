@@ -62,3 +62,12 @@ docker-build-coverage:
 
 docker-coverage: docker-build-coverage
 	docker run --rm coverage
+
+
+# Debug
+
+ipython: install-python
+	uvx ipython
+
+pytest-watcher: install-python
+	uvx --with rich --with pytest-asyncio pytest-watcher . -ssvv
