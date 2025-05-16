@@ -8,3 +8,8 @@ uv.lock
 # Python coverage
 .coverage
 htmlcov
+
+.env
+
+# nix
+flake.lock
